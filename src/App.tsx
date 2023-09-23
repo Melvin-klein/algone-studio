@@ -10,4 +10,6 @@ function App() {
     )
 }
 
+App.count = 3;
+
 export default App
