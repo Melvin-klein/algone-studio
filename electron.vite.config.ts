@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
     main: {
         build: {
+            outDir: './build/main',
             rollupOptions: {
                 input: {
                     index: resolve(__dirname, 'desktop/main/index.ts')
@@ -14,6 +15,7 @@ export default defineConfig({
     },
     preload: {
         build: {
+            outDir: './build/preload',
             rollupOptions: {
                 input: {
                     index: resolve(__dirname, 'desktop/preload/index.ts')
@@ -24,6 +26,7 @@ export default defineConfig({
     renderer: {
         root: '.',
         build: {
+            outDir: './build/renderer',
             rollupOptions: {
                 input: {
                     index: resolve(__dirname, 'index.html')
