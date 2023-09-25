@@ -4,6 +4,10 @@
   "private": true,
   "version": "0.0.1",
   "license": "MIT",
+  "author": {
+    "name": "Melvine Nargeot",
+    "email": "melvine.nargeot@gmail.com"
+  },
   "main": "build/main/index.js",
   "scripts": {
     "dev": "vite",
