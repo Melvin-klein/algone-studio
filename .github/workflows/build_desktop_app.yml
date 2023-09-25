@@ -30,8 +30,8 @@ jobs:
         id: build
         run: npm run make
 
-      #- name: Archive binary
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: ${{ matrix.os }}-binary
-      #    path: out/make/zip/darwin
+      - name: Archive binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}-binary
+          path: out/make
