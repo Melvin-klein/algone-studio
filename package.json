@@ -3,6 +3,7 @@
   "description": "A desktop/web application to create, train and publish artificial neural networks.",
   "private": true,
   "version": "0.0.1",
+  "license": "MIT",
   "main": "build/main/index.js",
   "scripts": {
     "dev": "vite",
