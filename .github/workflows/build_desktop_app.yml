@@ -81,7 +81,6 @@ jobs:
           prerelease: false
 
       - name: Download MacOS artifact
-        if: ${{ matrix.os }} == macos-latest
         id: download_macos
         uses: actions/download-artifact@v3
         with:
@@ -94,4 +93,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ steps.download_macos.outputs.download-path }}
+          asset_name: algone-studio.app
           asset_content_type: application/octet-stream
