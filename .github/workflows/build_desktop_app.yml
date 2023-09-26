@@ -34,10 +34,11 @@ jobs:
         run: npm run make
 
       - name: Archive binary
+        if: ${{ matrix.os }} == macos-latest
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}-binary
-          path: out/make
+          path: out/algone-studio-darwin-x64/algone-studio.app
 
   release:
     runs-on: ubuntu-latest
@@ -79,17 +80,18 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Download ubuntu artifact
-        id: download-ubuntu
+      - name: Download MacOS artifact
+        if: ${{ matrix.os }} == macos-latest
+        id: download_macos
         uses: actions/download-artifact@v3
         with:
-          name: ubuntu-latest-binary
+          name: macos-latest-binary
 
-      - name: Upload Ubuntu binary to release
+      - name: Upload MacOS binary to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.download.outputs.download-path }}
-          asset_content_type: application/gzip
+          asset_path: ${{ steps.download_macos.outputs.download-path }}
+          asset_content_type: application/octet-stream
