@@ -14,8 +14,6 @@ jobs:
 
       - name: Set Up Node.js
         uses: actions/setup-node@v2
-        with:
-          node-version: 14
 
       - name: Install Dependencies
         run: npm install
@@ -29,9 +27,7 @@ jobs:
       - name: Archive Windows Build
         run: |
           mkdir -p releases
-          mv ./out/make/win releases/
-          cd releases
-          zip -r electron-build-windows.zip win/
+          mv ./out/make/zip/win32/x64/algone-studio-* releases/algone-studio-win-x64.zip
         shell: bash
 
   build-macos:
@@ -42,8 +38,6 @@ jobs:
 
       - name: Set Up Node.js
         uses: actions/setup-node@v2
-        with:
-          node-version: 14
 
       - name: Install Dependencies
         run: npm install
@@ -57,9 +51,7 @@ jobs:
       - name: Archive macOS Build
         run: |
           mkdir -p releases
-          mv ./out/make/darwin releases/
-          cd releases
-          zip -r electron-build-macos.zip darwin/
+          mv ./out/make/zip/darwin/x64/algone-studio-* releases/algone-studio-darwin-x64.zip
         shell: bash
 
   build-linux:
@@ -70,8 +62,6 @@ jobs:
 
       - name: Set Up Node.js
         uses: actions/setup-node@v2
-        with:
-          node-version: 14
 
       - name: Install Dependencies
         run: npm install
@@ -85,9 +75,7 @@ jobs:
       - name: Archive Linux Build
         run: |
           mkdir -p releases
-          mv ./out/make/linux releases/
-          cd releases
-          zip -r electron-build-linux.zip linux/
+          mv ./out/make/zip/linux/x64/algone-studio-* releases/algone-studio-linux-x64.zip
         shell: bash
 
   create-release:
@@ -140,8 +128,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: releases/electron-build-windows.zip
-          asset_name: electron-build-windows.zip
+          asset_path: releases/algone-studio-win-x64.zip
+          asset_name: algone-studio-win-x64.zip
           asset_content_type: application/zip
 
       - name: Upload macOS Build
@@ -150,8 +138,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: releases/electron-build-macos.zip
-          asset_name: electron-build-macos.zip
+          asset_path: releases/algone-studio-darwin-x64.zip
+          asset_name: algone-studio-darwin-x64.zip
           asset_content_type: application/zip
 
       - name: Upload Linux Build
@@ -160,6 +148,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: releases/electron-build-linux.zip
-          asset_name: electron-build-linux.zip
+          asset_path: releases/algone-studio-linux-x64.zip
+          asset_name: algone-studio-linux-x64.zip
           asset_content_type: application/zip
