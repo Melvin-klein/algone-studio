@@ -1,52 +1,97 @@
-name: Build and Release desktop app
+name: Publish Electron Forge Build to GitHub Releases
 
 on:
   push:
     branches:
-      - master
+      - master  # Change this to your default branch
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+  build-windows:
+    runs-on: windows-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v3
-
-      - name: Install dependencies
-        run: npm i
-
-      - name: Build app
-        run: npm run desktop-build
-
-      - name: Build Electron app
-        id: build
-        run: npm run make
-
-      - name: Archive binary
-        if: ${{ matrix.os }} == macos-latest
-        uses: actions/upload-artifact@v3
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
         with:
-          name: ${{ matrix.os }}-binary
-          path: out/algone-studio-darwin-x64/algone-studio.app
+          node-version: 14
 
-  release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    outputs:
-      version: ${{ steps.check_incremented_value.outputs.incremented_value }}
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      - name: Install Dependencies
+        run: npm install
 
-    needs: build
+      - name: Build Electron Forge for Windows
+        run: npx electron-forge make --platform win
+
+      - name: Archive Windows Build
+        run: |
+          mkdir -p releases
+          mv ./out/make/win releases/
+          cd releases
+          zip -r electron-build-windows.zip win/
+        shell: bash
+
+  build-macos:
+    runs-on: macos-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Electron Forge for macOS
+        run: npx electron-forge make --platform darwin
+
+      - name: Archive macOS Build
+        run: |
+          mkdir -p releases
+          mv ./out/make/darwin releases/
+          cd releases
+          zip -r electron-build-macos.zip darwin/
+        shell: bash
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Electron Forge for Linux
+        run: npx electron-forge make --platform linux
+
+      - name: Archive Linux Build
+        run: |
+          mkdir -p releases
+          mv ./out/make/linux releases/
+          cd releases
+          zip -r electron-build-linux.zip linux/
+        shell: bash
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: [build-windows, build-macos, build-linux]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
 
       - name: Check semver incremented value
         id: check_incremented_value
@@ -66,39 +111,46 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag-prefix: 'v'
-          default-version: '0.0.1'
+          default-version: 'v0.0.1'
           incremented-value: ${{ steps.check_incremented_value.outputs.incremented_value }}
 
-      - name: Create Release
+      - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
-          tag_name: ${{ steps.tag.outputs.semantic-version }}
-          release_name: ${{ steps.tag.outputs.semantic-version }}
+          tag_name: ${{ steps.tag.outputs.semantic-version }}  # Replace with your desired release tag
+          release_name: Release ${{ steps.tag.outputs.semantic-version }}  # Replace with your desired release name
           draft: false
           prerelease: false
 
-  publish:
-    runs-on: ubuntu-latest
-    needs: release
-    permissions:
-      contents: read
-    steps:
-      - name: Download MacOS artifact
-        id: download_macos
-        uses: actions/download-artifact@v3
-        with:
-          name: macos-latest-binary
-
-      - name: Upload MacOS binary to release
+      - name: Upload Windows Build
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
-          upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_path: ${{ steps.download_macos.outputs.download-path }}
-          asset_name: algone-studio.app
-          asset_content_type: application/octet-stream
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: releases/electron-build-windows.zip
+          asset_name: electron-build-windows.zip
+          asset_content_type: application/zip
+
+      - name: Upload macOS Build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: releases/electron-build-macos.zip
+          asset_name: electron-build-macos.zip
+          asset_content_type: application/zip
+
+      - name: Upload Linux Build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: releases/electron-build-linux.zip
+          asset_name: electron-build-linux.zip
+          asset_content_type: application/zip
