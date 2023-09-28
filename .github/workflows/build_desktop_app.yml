@@ -21,6 +21,9 @@ jobs:
         run: npm install
 
       - name: Build Electron Forge for Windows
+        run: npm run desktop-build
+
+      - name: Build Electron Forge for Windows
         run: npm run make
 
       - name: Archive Windows Build
@@ -44,6 +47,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+
+      - name: Build Electron Forge for Windows
+        run: npm run desktop-build
 
       - name: Build Electron Forge for macOS
         run: npm run make
@@ -69,6 +75,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+
+      - name: Build Electron Forge for Windows
+        run: npm run desktop-build
 
       - name: Build Electron Forge for Linux
         run: npm run make
