@@ -21,7 +21,7 @@ jobs:
         run: npm install
 
       - name: Build Electron Forge for Windows
-        run: npx electron-forge make --platform win
+        run: npm run make
 
       - name: Archive Windows Build
         run: |
@@ -46,7 +46,7 @@ jobs:
         run: npm install
 
       - name: Build Electron Forge for macOS
-        run: npx electron-forge make --platform darwin
+        run: npm run make
 
       - name: Archive macOS Build
         run: |
@@ -71,7 +71,7 @@ jobs:
         run: npm install
 
       - name: Build Electron Forge for Linux
-        run: npx electron-forge make --platform linux
+        run: npm run make
 
       - name: Archive Linux Build
         run: |
