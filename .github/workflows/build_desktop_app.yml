@@ -5,6 +5,9 @@ on:
     branches:
       - master  # Change this to your default branch
 
+permissions:
+  contents: write
+
 jobs:
 #  build-windows:
 #    runs-on: windows-latest
@@ -14,6 +17,8 @@ jobs:
 #
 #      - name: Set Up Node.js
 #        uses: actions/setup-node@v2
+#        with:
+#          node-version: 18
 #
 #      - name: Install Dependencies
 #        run: npm install
@@ -38,6 +43,8 @@ jobs:
 
       - name: Set Up Node.js
         uses: actions/setup-node@v2
+        with:
+          node-version: 18
 
       - name: Install Dependencies
         run: npm install
@@ -62,6 +69,8 @@ jobs:
 #
 #      - name: Set Up Node.js
 #        uses: actions/setup-node@v2
+#        with:
+#          node-version: 18
 #
 #      - name: Install Dependencies
 #        run: npm install
