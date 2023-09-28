@@ -105,6 +105,11 @@ jobs:
         with:
           node-version: 14
 
+      - uses: actions/download-artifact@v3
+        id: download-darwin
+        with:
+          name: algone-studio-darwin
+
       - name: Check semver incremented value
         id: check_incremented_value
         run: |
@@ -125,11 +130,6 @@ jobs:
           tag-prefix: 'v'
           default-version: '0.0.1'
           incremented-value: ${{ steps.check_incremented_value.outputs.incremented_value }}
-
-      - uses: actions/download-artifact@v3
-        id: download-darwin
-        with:
-          name: algone-studio-darwin
 
       - name: Create GitHub Release
         id: create_release
@@ -155,7 +155,7 @@ jobs:
       - name: Upload macOS Build
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ steps.download-darwin.outputs.download-path }}/algone-studio-darwin-x64.zip
