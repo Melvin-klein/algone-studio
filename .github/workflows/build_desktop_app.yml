@@ -115,6 +115,11 @@ jobs:
         with:
           name: algone-studio-darwin
 
+      - uses: actions/download-artifact@v3
+        id: download-linux
+        with:
+          name: algone-studio-linux
+
       - name: Check semver incremented value
         id: check_incremented_value
         run: |
@@ -167,12 +172,12 @@ jobs:
           asset_name: algone-studio-darwin-x64.zip
           asset_content_type: application/zip
 
-#      - name: Upload Linux Build
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: releases/algone-studio-linux-x64.zip
-#          asset_name: algone-studio-linux-x64.zip
-#          asset_content_type: application/zip
+      - name: Upload Linux Build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.download-linux.outputs.download-path }}/algone-studio-linux-x64.zip
+          asset_name: algone-studio-linux-x64.zip
+          asset_content_type: application/zip
