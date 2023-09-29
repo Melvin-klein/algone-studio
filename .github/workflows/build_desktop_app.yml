@@ -9,31 +9,31 @@ permissions:
   contents: write
 
 jobs:
-#  build-windows:
-#    runs-on: windows-latest
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v2
-#
-#      - name: Set Up Node.js
-#        uses: actions/setup-node@v2
-#        with:
-#          node-version: 18
-#
-#      - name: Install Dependencies
-#        run: npm install
-#
-#      - name: Build Electron Forge for Windows
-#        run: npm run desktop-build
-#
-#      - name: Build Electron Forge for Windows
-#        run: npm run make
-#
-#      - name: Archive Windows Build
-#        run: |
-#          mkdir -p releases
-#          mv ./out/make/zip/win32/x64/algone-studio-* releases/algone-studio-win-x64.zip
-#        shell: bash
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Electron Forge for Windows
+        run: npm run desktop-build
+
+      - name: Build Electron Forge for Windows
+        run: npm run make
+
+      - name: Archive Windows Build
+        run: |
+          mkdir -p releases
+          mv ./out/make/zip/win/x64/algone-studio-* releases/algone-studio-win-x64.zip
+        shell: bash
 
   build-macos:
     runs-on: macos-latest
