@@ -62,15 +62,14 @@ jobs:
 
       - name: Archive macOS Build
         run: |
-          mkdir -p releases
-          mv ./out/make/zip/darwin/x64/algone-studio-* releases/algone-studio-darwin-x64.zip
+          zip -r algone-studio-darwin-x64.zip ./out/algone-studio-*
         shell: bash
 
       - name: Upload MacOS Artifact
         uses: actions/upload-artifact@v3
         with:
           name: algone-studio-darwin
-          path: releases/algone-studio-darwin-x64.zip
+          path: algone-studio-darwin-x64.zip
 
   build-linux:
     runs-on: ubuntu-latest
