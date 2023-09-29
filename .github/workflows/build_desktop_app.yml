@@ -89,9 +89,14 @@ jobs:
 
       - name: Archive Linux Build
         run: |
-          mkdir -p releases
-          mv ./out/make/zip/linux/x64/algone-studio-* releases/algone-studio-linux-x64.zip
+          zip -r algone-studio-linux-x64.zip ./out/algone-studio-*
         shell: bash
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: algone-studio-linux
+          path: algone-studio-linux-x64.zip
 
   create-release:
     runs-on: ubuntu-latest
