@@ -146,28 +146,24 @@ jobs:
         uses: SOLIDSoftworks/semver-tags@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag-prefix: 'v'
           default-version: '0.0.1'
           incremented-value: ${{ steps.check_incremented_value.outputs.incremented_value }}
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.3.2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.tag.outputs.semantic-version }}  # Replace with your desired release tag
-          release_name: Release ${{ steps.tag.outputs.semantic-version }}  # Replace with your desired release name
-          draft: false
-          prerelease: false
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Upload Windows Build
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: ${{ steps.download-win.outputs.download-path }}/algone-studio-win-x64.zip
-          asset_name: algone-studio-win-x64.zip
+          asset_name: algone-studio-win-x64-${{ steps.tag.outputs.semantic-version }}.zip
           asset_content_type: application/zip
 
       - name: Upload macOS Build
@@ -175,9 +171,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: ${{ steps.download-darwin.outputs.download-path }}/algone-studio-darwin-x64.zip
-          asset_name: algone-studio-darwin-x64.zip
+          asset_name: algone-studio-darwin-x64-${{ steps.tag.outputs.semantic-version }}.zip
           asset_content_type: application/zip
 
       - name: Upload Linux Build
@@ -185,7 +181,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: ${{ steps.download-linux.outputs.download-path }}/algone-studio-linux-x64.zip
-          asset_name: algone-studio-linux-x64.zip
+          asset_name: algone-studio-linux-x64-${{ steps.tag.outputs.semantic-version }}.zip
           asset_content_type: application/zip
