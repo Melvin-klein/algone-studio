@@ -62,7 +62,7 @@ jobs:
 
       - name: Archive macOS Build
         run: |
-          zip -r algone-studio-darwin-x64.zip ./out/algone-studio-*/algone-studio.app
+          mv ./out/make/zip/darwin/x64/algone-studio-*.zip ./algone-studio-darwin-x64.zip
         shell: bash
 
       - name: Upload MacOS Artifact
