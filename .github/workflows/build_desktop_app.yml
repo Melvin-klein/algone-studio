@@ -62,7 +62,7 @@ jobs:
 
       - name: Archive macOS Build
         run: |
-          zip -j algone-studio-darwin-x64.zip ./out/algone-studio-*/algone-studio.app
+          zip -r algone-studio-darwin-x64.zip ./out/algone-studio-*/algone-studio.app
         shell: bash
 
       - name: Upload MacOS Artifact
@@ -112,7 +112,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 18
 
       - uses: actions/download-artifact@v3
         id: download-win
@@ -146,7 +146,6 @@ jobs:
         uses: SOLIDSoftworks/semver-tags@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag-prefix: 'v'
           default-version: '0.0.1'
           incremented-value: ${{ steps.check_incremented_value.outputs.incremented_value }}
 
