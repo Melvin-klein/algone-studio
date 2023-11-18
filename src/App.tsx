@@ -1,11 +1,12 @@
 import './App.css'
+import './wasm/algone.d.ts'
 
 function App() {
     // const [count, setCount] = useState(0)
 
     return (
         <h1 className="text-3xl font-bold underline bg-red-500">
-            Hello world!
+            Algone Studio is using version { wasmExports.getAlgoneVersion() }
         </h1>
     )
 }
